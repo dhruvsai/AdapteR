@@ -23,16 +23,4 @@ test_that("Benchmarking for diag ",
   })
 }
 
-#Writes result in csv format in the mentioned file 
-write.table(final,"C:/Users/admin/Downloads/Benchmarking_Results/benchmarking_diag.csv",append = TRUE,row.names = FALSE)
-
-#Returns recent benchmarking results.
-recent_result = final
-print(recent_result)
-
-#Shows all the benchmarking results done .
-
-#ans=readline(prompt = "Do you want to see overall benchmarking results.If yes, type "y" else type "n"")
-
-overall_results = read.table("C:/Users/admin/Downloads/Benchmarking_Results/benchmarking_diag.csv")
-print(overall_results)
+assist_benchmarking(FunctionName = "diag",final,RecentResults = "Y",OverallResults = "N")
