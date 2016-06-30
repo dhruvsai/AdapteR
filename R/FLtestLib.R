@@ -104,7 +104,7 @@ eval_expect_equal <- function(e, Renv, FLenv,
                               expectation=c(),
                               noexpectation=c(),
                               ...){
-    browser()
+    #browser()
     if(runs>=1)
         e <- substitute(e)
     if(runs>1)
@@ -122,7 +122,13 @@ eval_expect_equal <- function(e, Renv, FLenv,
     eval(expr = e, envir=FLenv)
     flEndT <- Sys.time()
     newNames <- ls(envir = Renv)
-    for(n in unique(c(expectation,setdiff(noexpectation,setdiff(newNames,oldNames)))))
+    vToCheckNames <- setdiff(newNames,oldNames)
+    if(length(noexpectation)>0)
+    vToCheckNames <- setdiff(noexpectation,vToCheckNames)
+    if(length(expectation)>0)
+    vToCheckNames <- c(expectation,vToCheckNames)
+
+    for(n in unique(vToCheckNames))
         FLexpect_equal(get(n,envir = Renv), get(n,envir = FLenv),...)
     ## TODO: store statistics in database
     ## TODO: cbind values set in expression
@@ -136,13 +142,13 @@ eval_expect_equal <- function(e, Renv, FLenv,
 
 #' DEPRECATED: use eval_expect_equal
 #' @export
-expect_eval_equal <- function(initF,FLcomputationF,RcomputationF,benchmark=FALSE,...)
+expect_eval_equal <- function(initF,FLcomputationF,RcomputationF,...)
 {
   I <- initF(...)
   if(!is.list(I$FL))
   I <- list(FL=list(I$FL),R=list(I$R))
-    FLexpect_equal(do.call(FLcomputationF,I$FL),
-                 do.call(RcomputationF,I$R),
+   FLexpect_equal(FLcomputationF(I$FL),
+                 RcomputationF(I$R),
                  check.attributes=FALSE)
 }
 
@@ -326,7 +332,8 @@ initF.FLMatrix <- function(n,isSquare=FALSE,type="float",...)
         connection = getOption("connectionFL"),
         database = getOption("ResultDatabaseFL"),
         table_name = c(mtrx=vtableName),
-        variables=list(rowIdColumn=paste0("mtrx.rowIdColumn"),
+        variables=list(MATRIX_ID="'%insertIDhere%'",
+                      rowIdColumn=paste0("mtrx.rowIdColumn"),
                       colIdColumn=paste0("mtrx.colIdColumn"),
                       valueColumn=paste0("mtrx.valueColumn")),
         whereconditions=c(paste0("mtrx.rowIdColumn < ",n+1),
@@ -348,7 +355,7 @@ initF.FLTable <- function(rows,cols,...)
                       getOption("ResultDatabaseFL"),
                       "fzzlserial",
                       "serialval",
-                      whereconditions=paste0(getOption("ResultDatabaseFL"),".fzzlserial.serialval<100"))
+                      whereconditions=paste0(getOption("ResultDatabaseFL"),".fzzlserial.serialval < ",rows+1))
   return(WideTable[1:rows,base::sample(c("randval","serialval"),cols,replace=TRUE)])
 }
 
