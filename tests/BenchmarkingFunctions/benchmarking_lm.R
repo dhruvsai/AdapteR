@@ -27,16 +27,6 @@ test_that("Benchmarking for diag ",
   })
 }
 
-#Writes result in csv format in the mentioned file 
-write.table(final,"C:/Users/admin/Downloads/Benchmarking_Results/benchmarking_lm.csv",append = TRUE,row.names = FALSE)
-
-#Returns recent benchmarking results.
-recent_result = final
-print(recent_result)
-
-#Shows all the benchmarking results done .
-
-#ans=readline(prompt = "Do you want to see overall benchmarking results.If yes, type "y" else type "n"")
-
-overall_results = read.table("C:/Users/admin/Downloads/Benchmarking_Results/benchmarking_lm.csv")
-print(overall_results)
+#To write Benchmarking results into file on one's machine.
+#To see recent and overall result in R.
+assist_benchmarking(FunctionName = "lm",final,RecentResults = "Y",OverallResults = "N")
