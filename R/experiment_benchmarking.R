@@ -21,3 +21,26 @@ FL_benchmarking_generic<-function(specs=list(list(n=5,isSquare = TRUE,...),list(
   
 }
 
+
+# To write Benchmarking results into file on one's machine.
+# To see recent result and overall results of Benchmarking in R.
+assist_Benchmarking <- function(FunctionName = "",final,RecentResults = "Y",OverallResults = "N"){
+write.table(final,paste0("C:/Users/admin/Downloads/Benchmarking_Results/benchmarking_",FunctionName,".csv"),append = TRUE,row.names = FALSE)
+
+#Returns recent benchmarking results.
+recent_result = final
+print(recent_result)
+
+#Shows all the benchmarking results done .
+
+#ans=readline(prompt = "Do you want to see overall benchmarking results.If yes, type "y" else type "n"")
+
+overall_results = read.table(paste0("C:/Users/admin/Downloads/Benchmarking_Results/benchmarking_",FunctionName,".csv"))
+print(overall_results)
+}  
+
+
+}
+
+
+
